@@ -30,7 +30,7 @@ body{
 }
 .logo{
     width:250px;
-    margin-bottom:40px;
+    margin-bottom:10px;
 }
 h1{
     margin-bottom:10px;
@@ -78,8 +78,9 @@ button:hover{
     display:none;
 }
 .powered{
-    width:260px;
-    margin-top:40px;
+    width:180px;
+    margin-top:0;
+    margin-bottom:30px;
     opacity:.8;
 }
 </style>
@@ -87,7 +88,11 @@ button:hover{
 <body>
 <div class="container">
     <!-- Logo -->
-    <img src="Logo schwarz.png" class="logo" alt="BYOD Studios">
+    <img src="Logo.png" class="logo" alt="BYOD Studios">
+    <!-- powered by Logo -->
+    <img src="powered by Louis Schwickert.png"
+         class="powered"
+         alt="Powered by Louis Schwickert">
     <!-- PIN-Bereich -->
     <div id="login">
         <h1>PIN erforderlich</h1>
@@ -102,10 +107,6 @@ button:hover{
         <div id="error">
             Falsche PIN.
         </div>
-        <!-- powered by Logo -->
-        <img src="powered by Louis Schwickert schwarz .png"
-             class="powered"
-             alt="Powered by Louis Schwickert">
     </div>
     <!-- Türchen -->
     <div id="content">
@@ -118,9 +119,9 @@ function checkPin(){
         document.getElementById("error").style.display="none";
         document.getElementById("login").innerHTML = `
             <img src="Logo.png" class="logo" alt="BYOD Studios">
+            <img src="powered by Louis Schwickert.png" class="powered" alt="Powered by Louis Schwickert">
             <h1>Hallo Alexandra Schwickert…</h1>
             <p>Dein Zugriff wird überprüft.</p>
-            <img src="powered by Louis Schwickert schwarz .png" class="powered" alt="Powered by Louis Schwickert">
         `;
         setTimeout(function(){
             document.getElementById("login").style.display="none";
