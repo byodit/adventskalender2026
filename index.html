@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PIN erforderlich</title>
-
 <style>
 *{
     margin:0;
@@ -12,47 +11,50 @@
     box-sizing:border-box;
     font-family:Arial, Helvetica, sans-serif;
 }
-
 body{
-    background:#111;
-    color:white;
+    background:#f5f5f5;
+    color:#111;
     display:flex;
     justify-content:center;
     align-items:center;
     min-height:100vh;
 }
-
 .container{
     width:100%;
     max-width:500px;
     text-align:center;
     padding:30px;
+    background:#ffffff;
+    border-radius:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
 }
-
 .logo{
     width:250px;
     margin-bottom:40px;
 }
-
 h1{
     margin-bottom:10px;
+    color:#111;
 }
-
 p{
-    color:#bbb;
+    color:#666;
     margin-bottom:25px;
 }
-
 input{
     width:100%;
     padding:15px;
-    border:none;
+    border:2px solid #ddd;
     border-radius:10px;
     font-size:18px;
     text-align:center;
     margin-bottom:20px;
+    background:#fafafa;
+    color:#111;
 }
-
+input:focus{
+    outline:none;
+    border-color:#ff3131;
+}
 button{
     width:100%;
     padding:15px;
@@ -64,111 +66,79 @@ button{
     font-size:18px;
     transition:.2s;
 }
-
 button:hover{
     background:#d92929;
 }
-
 #error{
     margin-top:20px;
-    color:#ff5a5a;
+    color:#d92929;
     display:none;
 }
-
 #content{
     display:none;
 }
-
 .powered{
     width:260px;
     margin-top:40px;
     opacity:.8;
 }
 </style>
-
 </head>
 <body>
-
 <div class="container">
-
     <!-- Logo -->
-    <img src="Logo schwarz.png" class="logo" alt="BYOD Studios">
-
+    <img src="Logo.png" class="logo" alt="BYOD Studios">
     <!-- PIN-Bereich -->
     <div id="login">
-
         <h1>PIN erforderlich</h1>
-
-        <p>Bitte geben Sie den Zugangscode ein.</p>
-
+        <p>Bitte gib den Zugangscode ein.</p>
         <input
             type="password"
             id="pin"
             placeholder="PIN">
-
         <button onclick="checkPin()">
             Zugriff freischalten
         </button>
-
         <div id="error">
             Falsche PIN.
         </div>
-
         <!-- powered by Logo -->
-        <img src="powered by Louis Schwickert schwarz .png"
+        <img src="powered by Louis Schwickert.png"
              class="powered"
              alt="Powered by Louis Schwickert">
-
     </div>
-
     <!-- Türchen -->
     <div id="content">
         <div data-tuerchen_embed data-public_key="IT0e5jt59VgkIeBX"></div>
     </div>
-
 </div>
-
 <script>
 function checkPin(){
-
     if(document.getElementById("pin").value === "07011981"){
-
         document.getElementById("error").style.display="none";
-
         document.getElementById("login").innerHTML = `
-            <img src="logo.png" class="logo" alt="BYOD Studios">
-
-            <h1>Zugriff wird überprüft…</h1>
-
-            <p>Bitte warten Sie einen Moment.</p>
-
-            <img src="powered.png" class="powered" alt="Powered by Louis Schwickert">
+            <img src="Logo.png" class="logo" alt="BYOD Studios">
+            <h1>Hallo Alexandra Schwickert…</h1>
+            <p>Dein Zugriff wird überprüft.</p>
+            <img src="powered by Louis Schwickert.png" class="powered" alt="Powered by Louis Schwickert">
         `;
-
         setTimeout(function(){
-
             document.getElementById("login").style.display="none";
             document.getElementById("content").style.display="block";
-
             const s = document.createElement("script");
             s.src = "https://tuerchen.app/embed.js?da39a3ee";
             s.charset = "UTF-8";
             document.body.appendChild(s);
-
         },7000);
-
     }else{
         document.getElementById("error").style.display="block";
     }
-
 }
-
 document.getElementById("pin").addEventListener("keypress",function(e){
     if(e.key==="Enter"){
         checkPin();
     }
 });
 </script>
-
 </body>
 </html>
