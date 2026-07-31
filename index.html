@@ -83,9 +83,38 @@ button:hover{
     margin-bottom:30px;
     opacity:.8;
 }
+
+/* Querformat-Hinweis */
+#orientation-warning{
+    display:none;
+    width:100%;
+    max-width:500px;
+    text-align:center;
+    padding:30px;
+    background:#ffffff;
+    border-radius:16px;
+    box-shadow:0 4px 20px rgba(0,0,0,.08);
+}
+#orientation-warning p{
+    margin-bottom:0;
+    color:#111;
+    font-weight:bold;
+}
+#app-container{
+    display:none;
+}
 </style>
 </head>
 <body>
+
+<!-- Hinweis bei Querformat -->
+<div id="orientation-warning">
+    <h1>Bitte Gerät drehen</h1>
+    <p>Hinweis: Diese Seite funktioniert ausschließlich im Hochformat. Bitte vergewissere Dich, dass Du den Kalender nicht im Querformat öffnest.</p>
+</div>
+
+<!-- Eigentlicher App-Inhalt (nur im Hochformat sichtbar) -->
+<div id="app-container">
 <div class="container">
     <!-- Logo -->
     <img src="Logo schwarz.png" class="logo" alt="BYOD Studios">
@@ -113,7 +142,22 @@ button:hover{
         <div data-tuerchen_embed data-public_key="IT0e5jt59VgkIeBX"></div>
     </div>
 </div>
+</div>
+
 <script>
+function checkOrientation(){
+    const isLandscape = window.matchMedia("(orientation: landscape)").matches;
+    document.getElementById("orientation-warning").style.display = isLandscape ? "block" : "none";
+    document.getElementById("app-container").style.display = isLandscape ? "none" : "block";
+}
+
+// Beim Laden sofort prüfen
+checkOrientation();
+
+// Bei Drehung/Resize erneut prüfen
+window.addEventListener("resize", checkOrientation);
+window.addEventListener("orientationchange", checkOrientation);
+
 function checkPin(){
     if(document.getElementById("pin").value === "07011981"){
         document.getElementById("error").style.display="none";
