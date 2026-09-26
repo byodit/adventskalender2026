@@ -103,6 +103,73 @@ button:hover{
 #app-container{
     display:none;
 }
+
+/* Lösungswort-Anzeige */
+#solutionWrapper{
+    margin-bottom:20px;
+}
+#solutionWord{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:5px;
+    margin-bottom:15px;
+}
+.letter-box{
+    width:24px;
+    height:32px;
+    border-bottom:3px solid #ff3131;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+    font-size:16px;
+    color:#111;
+}
+
+/* Buchstaben-Button */
+.letter-btn{
+    margin-bottom:20px;
+}
+
+/* Pop-up / Modal */
+.modal-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:1000;
+    padding:20px;
+}
+.modal-box{
+    background:#ffffff;
+    border-radius:16px;
+    padding:30px;
+    max-width:400px;
+    width:100%;
+    text-align:center;
+    box-shadow:0 4px 20px rgba(0,0,0,.2);
+}
+.modal-box h2{
+    margin-bottom:10px;
+    color:#111;
+}
+.modal-box p{
+    margin-bottom:20px;
+}
+#modalFeedback{
+    margin-bottom:10px;
+    font-weight:bold;
+    min-height:20px;
+}
+.modal-close-btn{
+    background:#666;
+}
+.modal-close-btn:hover{
+    background:#444;
+}
 </style>
 </head>
 <body>
@@ -139,9 +206,27 @@ button:hover{
     </div>
     <!-- Türchen -->
     <div id="content">
+        <!-- Lösungswort -->
+        <div id="solutionWrapper">
+            <div id="solutionWord"></div>
+            <button type="button" id="openLetterModalBtn" class="letter-btn">Hier Buchstaben eintragen</button>
+        </div>
         <div data-tuerchen_embed data-public_key="IT0e5jt59VgkIeBX"></div>
     </div>
 </div>
+</div>
+
+<!-- Pop-up für Buchstaben-Eingabe -->
+<div class="modal-overlay" id="letterModalOverlay">
+    <div class="modal-box">
+        <h2>Buchstabe eintragen</h2>
+        <p>Gib die Türchen-Nummer (1–24) und den dazugehörigen Buchstaben ein.</p>
+        <input type="number" id="modalDay" min="1" max="24" placeholder="Türchen-Nummer">
+        <input type="text" id="modalLetter" maxlength="1" placeholder="Buchstabe" style="text-transform:uppercase;">
+        <div id="modalFeedback"></div>
+        <button type="button" onclick="checkLetter()">Prüfen</button>
+        <button type="button" class="modal-close-btn" onclick="closeLetterModal()" style="margin-top:12px;">Schließen</button>
+    </div>
 </div>
 
 <script>
@@ -182,6 +267,116 @@ document.getElementById("pin").addEventListener("keypress",function(e){
         checkPin();
     }
 });
+
+/* ===== Buchstaben-Rätsel: Lösungswort ADVENTSKALENDERGESCHENKE ===== */
+// Reihenfolge der Buchstaben im fertigen Lösungswort (Position 1-24)
+const solutionLetters = ["G","D","V","E","N","T","S","K","A","L","E","N","D","E","R","G","E","S","C","H","E","N","K","E"];
+
+// Durcheinander-Zuordnung: Tag -> welcher Buchstabe dort steckt und an welcher
+// Position im Lösungswort er landet, wenn er richtig erraten wird.
+const dayAnswers = {
+    1:  { letter:"A", position:9  },
+    2:  { letter:"G", position:16 },
+    3:  { letter:"E", position:4  },
+    4:  { letter:"C", position:19 },
+    5:  { letter:"D", position:2  },
+    6:  { letter:"E", position:24 },
+    7:  { letter:"E", position:11 },
+    8:  { letter:"T", position:6  },
+    9:  { letter:"G", position:1  },
+    10: { letter:"H", position:20 },
+    11: { letter:"D", position:13 },
+    12: { letter:"K", position:8  },
+    13: { letter:"E", position:17 },
+    14: { letter:"V", position:3  },
+    15: { letter:"N", position:22 },
+    16: { letter:"L", position:10 },
+    17: { letter:"R", position:15 },
+    18: { letter:"N", position:5  },
+    19: { letter:"K", position:23 },
+    20: { letter:"S", position:18 },
+    21: { letter:"S", position:7  },
+    22: { letter:"N", position:12 },
+    23: { letter:"E", position:21 },
+    24: { letter:"E", position:14 }
+};
+
+const STORAGE_KEY = "adventLetterProgress";
+let foundPositions = {};
+try{
+    foundPositions = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+}catch(e){
+    foundPositions = {};
+}
+
+function renderSolution(){
+    const container = document.getElementById("solutionWord");
+    if(!container) return;
+    container.innerHTML = "";
+    solutionLetters.forEach(function(letter, idx){
+        const position = idx + 1;
+        const box = document.createElement("div");
+        box.className = "letter-box";
+        box.textContent = foundPositions[position] ? letter : "";
+        container.appendChild(box);
+    });
+}
+
+function openLetterModal(){
+    document.getElementById("modalDay").value = "";
+    document.getElementById("modalLetter").value = "";
+    document.getElementById("modalFeedback").textContent = "";
+    document.getElementById("letterModalOverlay").style.display = "flex";
+}
+
+function closeLetterModal(){
+    document.getElementById("letterModalOverlay").style.display = "none";
+}
+
+function checkLetter(){
+    const dayInput = document.getElementById("modalDay");
+    const letterInput = document.getElementById("modalLetter");
+    const feedback = document.getElementById("modalFeedback");
+
+    const day = parseInt(dayInput.value, 10);
+    const letter = letterInput.value.trim().toUpperCase();
+
+    if(!day || day < 1 || day > 24 || !letter){
+        feedback.style.color = "#d92929";
+        feedback.textContent = "Bitte Türchen-Nummer (1–24) und Buchstabe eingeben.";
+        return;
+    }
+
+    const answer = dayAnswers[day];
+    if(answer && answer.letter === letter){
+        foundPositions[answer.position] = true;
+        try{
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(foundPositions));
+        }catch(e){}
+        renderSolution();
+        feedback.style.color = "#2e7d32";
+        feedback.textContent = "Richtig! Der Buchstabe wurde eingetragen.";
+        letterInput.value = "";
+        dayInput.value = "";
+    }else{
+        feedback.style.color = "#d92929";
+        feedback.textContent = "Leider falsch. Versuch's nochmal.";
+    }
+}
+
+document.getElementById("openLetterModalBtn").addEventListener("click", openLetterModal);
+document.getElementById("letterModalOverlay").addEventListener("click", function(e){
+    if(e.target === this){
+        closeLetterModal();
+    }
+});
+document.getElementById("modalLetter").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        checkLetter();
+    }
+});
+
+renderSolution();
 </script>
 </body>
 </html>
