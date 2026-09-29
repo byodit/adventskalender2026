@@ -132,6 +132,43 @@ button:hover{
     margin-bottom:20px;
 }
 
+/* Spielregeln zwischen Lückenwort und Kalender */
+#spielregeln{
+    text-align:left;
+    background:#fafafa;
+    border:2px solid #eee;
+    border-radius:12px;
+    padding:20px 20px 10px 20px;
+    margin-bottom:25px;
+}
+#spielregeln ul{
+    list-style:none;
+    margin-bottom:10px;
+}
+#spielregeln li{
+    position:relative;
+    padding-left:22px;
+    margin-bottom:12px;
+    color:#111;
+    line-height:1.4;
+}
+#spielregeln li::before{
+    content:"";
+    position:absolute;
+    left:0;
+    top:7px;
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#ff3131;
+}
+#spielregeln .viel-spass{
+    text-align:center;
+    font-weight:bold;
+    color:#111;
+    margin-bottom:10px;
+}
+
 /* Pop-up / Modal */
 .modal-overlay{
     position:fixed;
@@ -211,6 +248,19 @@ button:hover{
             <div id="solutionWord"></div>
             <button type="button" id="openLetterModalBtn" class="letter-btn">Hier Buchstaben eintragen</button>
         </div>
+
+        <!-- Spielregeln -->
+        <div id="spielregeln">
+            <ul>
+                <li>Jeden Tag ein Türchen öffnen</li>
+                <li>Erkenne ALLE Songs</li>
+                <li>Suche ein Tagesmotto, was alle Songs verbindet</li>
+                <li>Bei richtigem Motto erhälst Du einen Buchstaben, den Du oben einträgst</li>
+                <li>Wenn er richtig ist, erscheint er in dem Lückenwort, wenn er falsch ist, musst Du erneut raten</li>
+            </ul>
+            <p class="viel-spass">Viel Spaß!</p>
+        </div>
+
         <div data-tuerchen_embed data-public_key="IT0e5jt59VgkIeBX"></div>
     </div>
 </div>
